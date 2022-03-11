@@ -1,7 +1,10 @@
 ﻿@{
-    ViewData["Title"] = "About";
+	ViewData["Title"] = "About";
 }
 <h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
-<p>Use this area to provide additional information.</p>
+<p>Author: <a href='@ViewData["URL"]' target="_blank">@ViewData["Author"]</a></p>
+<address>
+    <strong>More information: </strong> <a href="mailto:@ViewData["Email"]?subject=More information about app Sales Web">@ViewData["Email"]</a>
+</address>
