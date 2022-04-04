@@ -54,41 +54,19 @@ namespace SalesWeb
         {
             app.Use(async (context, next) =>
             {
-                if (!context.Response.Headers.ContainsKey("X-Frame-Options"))
-                    context.Response.Headers.Add("X-Frame-Options", "DENY");
+                IConfigurationSection securitySettings = Configuration.GetSection("SecuritySettings");
 
-                if (!context.Response.Headers.ContainsKey("X-Xss-Protection"))
-                    context.Response.Headers.Add("X-Xss-Protection", "1; mode=block");
+                if (securitySettings.Exists())
+                {
+                    foreach (IConfigurationSection security in securitySettings.GetChildren())
+                    {
+                        var key = security.GetValue<string>("Key");
+                        var value = security.GetValue<string>("Value");
 
-                if (!context.Response.Headers.ContainsKey("X-Content-Type-Options"))
-                    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-
-                if (!context.Response.Headers.ContainsKey("Referrer-Policy"))
-                    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
-
-                if (!context.Response.Headers.ContainsKey("X-Permitted-Cross-Domain-Policies"))
-                    context.Response.Headers.Add("X-Permitted-Cross-Domain-Policies", "none");
-
-                if (!context.Response.Headers.ContainsKey("Permissions-Policy"))
-                    context.Response.Headers.Add("Permissions-Policy", "accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=()");
-
-                if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
-                    context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'");
-                
-                if (!context.Response.Headers.ContainsKey("Strict-Transport-Security"))
-                    context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
-
-                if (!context.Response.Headers.ContainsKey("Cross-Origin-Embedder-Policy"))
-                    context.Response.Headers.Add("Cross-Origin-Embedder-Policy", "require-corp");
-
-                if (!context.Response.Headers.ContainsKey("Cross-Origin-Resource-Policy"))
-                    context.Response.Headers.Add("Cross-Origin-Resource-Policy", "same-site");
-
-                if (!context.Response.Headers.ContainsKey("Cross-Origin-Opener-Policy"))
-                    context.Response.Headers.Add("Cross-Origin-Opener-Policy", "same-origin");
-
-                if (!context.Response.Headers.ContainsKey("Expect-CT"))
-                    context.Response.Headers.Add("Expect-CT", "max-age=31536000");
+                        if (!context.Response.Headers.ContainsKey(key))
+                            context.Response.Headers.Add(key, value);
+                    }
+                }
 
                 await next();
             });
