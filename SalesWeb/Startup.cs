@@ -40,7 +40,7 @@ namespace SalesWeb
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<SalesWebContext>(options =>
-                    options.UseMySql(Configuration.GetConnectionString("SalesWebContext"), builder =>
+                        options.UseOracle(Configuration.GetConnectionString("SalesWebContext"), builder =>
                         builder.MigrationsAssembly("SalesWeb")));
 
             services.AddScoped<SeedingService>();
