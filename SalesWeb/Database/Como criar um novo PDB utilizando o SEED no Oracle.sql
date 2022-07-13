@@ -132,5 +132,12 @@ CON_NAME
 ------------------------------
 SALESWEB_PDB
 
+-- 16 Passo: No SQL Developer alternar do CDB CDB$ROOT para o PDB criado (SALESWEB_PDB):
+ALTER SESSION SET container = SALESWEB_PDB;
 
+-- 16º Passo: Para que o usuário criado (USR_SALESWEB) como ADMIN USER do PDB (SALESWEB_PDB) tenha 
+-- permissão para manipular o banco de dados devemos setar as seguintes diretivas:
+GRANT CREATE SESSION TO USR_SALESWEB;
+GRANT CREATE TABLE TO USR_SALESWEB;
 
+-- Com isso, podemos usar as migrations do EF com o usuário criado.
